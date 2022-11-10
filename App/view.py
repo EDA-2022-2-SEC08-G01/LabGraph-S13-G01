@@ -31,6 +31,7 @@ import threading
 from App import controller
 from DISClib.ADT import stack
 assert config
+import time
 
 """
 La vista se encarga de la interacción con el usuario.
@@ -50,7 +51,18 @@ initialStation = None
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
+def getTime():
+    """
+    devuelve el instante tiempo de procesamiento en milisegundos
+    """
+    return float(time.perf_counter()*1000)
 
+def deltaTime(end, start):
+    """
+    devuelve la diferencia entre tiempos de procesamiento muestreados
+    """
+    elapsed = float(end - start)
+    return elapsed
 
 def printMenu():
     print("\n")
@@ -83,17 +95,26 @@ def optionThree(cont):
 
 
 def optionFour(cont, initialStation):
+    start_time = getTime()
     controller.minimumCostPaths(cont, initialStation)
+    stop_time = getTime()
+    time = deltaTime(stop_time, start_time)
+    print(time)
 
 
 def optionFive(cont, destStation):
+    start_time = getTime()
     haspath = controller.hasPath(cont, destStation)
     print('Hay camino entre la estación base : ' +
           'y la estación: ' + destStation + ': ')
+    stop_time = getTime()
+    time = deltaTime(stop_time, start_time)
     print(haspath)
+    print(time)
 
 
 def optionSix(cont, destStation):
+    start_time = getTime()
     path = controller.minimumCostPath(cont, destStation)
     if path is not None:
         pathlen = stack.size(path)
@@ -103,6 +124,9 @@ def optionSix(cont, destStation):
             print(stop)
     else:
         print('No hay camino')
+    stop_time = getTime()
+    time = deltaTime(stop_time, start_time)
+    print(time)
 
 
 def optionSeven(cont):
@@ -158,3 +182,4 @@ if __name__ == "__main__":
     sys.setrecursionlimit(2 ** 20)
     thread = threading.Thread(target=thread_cycle)
     thread.start()
+
